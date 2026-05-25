@@ -1,0 +1,2999 @@
+ <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuorKick</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --bg-card: #141414;
+            --bg-hover: #1f1f1f;
+            --text: #ffffff;
+            --text-muted: #808080;
+            --accent: #e50914;
+            --accent-hover: #b20710;
+            --radius: 8px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ═══════════════════════════════════════
+           ШАПКА (Glassmorphism iOS)
+           ═══════════════════════════════════════ */
+        .header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 16px 4%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+            transition: background 0.3s;
+        }
+
+        .header.scrolled {
+            background: rgba(10,10,10,0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff375f, #ff9f0a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 100px;
+            padding: 10px 14px 10px 38px;
+            color: var(--text);
+            font-size: 14px;
+            width: 260px;
+            outline: none;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-box input:focus {
+            background: rgba(255,255,255,0.12);
+            border-color: var(--accent);
+            width: 320px;
+            box-shadow: 0 0 0 4px rgba(229, 9, 20, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+.tg-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 100px;
+            background: linear-gradient(135deg, #0088cc, #00a8e8);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 16px rgba(0, 136, 204, 0.3);
+            margin-left: 12px;
+        }
+
+        .tg-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 136, 204, 0.4);
+            background: linear-gradient(135deg, #0099dd, #00b8f0);
+        }
+
+        .tg-btn i {
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .tg-btn span { display: none; }
+            .tg-btn { padding: 10px 12px; margin-left: 8px; }
+            .tg-btn i { font-size: 20px; }
+        }
+
+        /* ═══════════════════════════════════════
+           ГЛАВНЫЙ БАННЕР (с размытым фоном)
+           ═══════════════════════════════════════ */
+        .hero {
+            position: relative;
+            height: 75vh;
+            display: flex;
+            align-items: flex-end;
+            padding: 0 4% 50px;
+            overflow: hidden;
+        }
+
+        .hero-bg-blur {
+            position: absolute;
+            top: -10%; left: -10%;
+            width: 120%; height: 120%;
+            background-size: cover;
+            background-position: center;
+            filter: blur(60px) brightness(0.4);
+            z-index: 0;
+            will-change: transform;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 70%;
+            background: linear-gradient(to top, var(--bg) 0%, transparent 100%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-size: 52px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 14px;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 18px;
+            color: var(--text-muted);
+            font-size: 15px;
+            flex-wrap: wrap;
+        }
+
+        .hero-meta .rating { color: #ffd700; font-weight: 700; }
+
+        .hero-desc {
+            font-size: 17px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 28px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 28px;
+            border-radius: 100px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 20px rgba(229, 9, 20, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(229, 9, 20, 0.5);
+        }
+
+        /* ═══════════════════════════════════════
+           РЕКЛАМНЫЙ БАННЕР
+           ═══════════════════════════════════════ */
+        .ad-section {
+            padding: 20px 4%;
+        }
+
+        .ad-banner {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%);
+            border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: all 0.4s;
+        }
+
+        .ad-banner:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border-color: rgba(229, 9, 20, 0.2);
+        }
+
+        .ad-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            opacity: 0.8;
+        }
+
+        .ad-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(0,0,0,0.9) 0%, transparent 60%);
+        }
+
+        .ad-content {
+            position: absolute;
+            bottom: 0; left: 0;
+            padding: 20px;
+            max-width: 70%;
+        }
+
+        .ad-label {
+            display: inline-block;
+            background: #0a84ff;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .ad-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .ad-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* ═══════════════════════════════════════
+           РАЗДЕЛИТЕЛЬ ТИПОВ (Фильмы / Мультики / Аниме / Дорамы)
+           ═══════════════════════════════════════ */
+        .type-tabs {
+            padding: 20px 4% 10px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .type-tabs::-webkit-scrollbar { display: none; }
+
+        .type-tab {
+            padding: 10px 24px;
+            border-radius: 100px;
+            background: var(--bg-card);
+            color: var(--text);
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .type-tab:hover, .type-tab.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 4px 20px rgba(229, 9, 20, 0.3);
+        }
+
+        .type-tab i { font-size: 13px; }
+
+        /* ═══════════════════════════════════════
+           КАТЕГОРИИ ЖАНРОВ
+           ═══════════════════════════════════════ */
+        .categories {
+            padding: 15px 4%;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .categories::-webkit-scrollbar { display: none; }
+
+        .category-btn {
+            padding: 8px 20px;
+            border-radius: 100px;
+            background: var(--bg-card);
+            color: var(--text);
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 4px 20px rgba(229, 9, 20, 0.3);
+        }
+
+        /* ═══════════════════════════════════════
+           СЕКЦИИ С ФИЛЬМАМИ
+           ═══════════════════════════════════════ */
+        .section {
+            padding: 15px 4% 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .movies-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        /* ═══════════════════════════════════════
+           КАРТОЧКА ФИЛЬМА (Glass Hover)
+           ═══════════════════════════════════════ */
+        .movie-card {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg-card);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            aspect-ratio: 2/3;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .movie-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            z-index: 10;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 40px rgba(229, 9, 20, 0.1);
+            border-color: rgba(229, 9, 20, 0.1);
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s;
+        }
+
+        .movie-card:hover .movie-poster {
+            transform: scale(1.1);
+        }
+
+        .movie-rating {
+            position: absolute;
+            top: 10px; right: 10px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            padding: 5px 8px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 12px;
+            color: #ffd700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .movie-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 18px;
+        }
+
+        .movie-card:hover .movie-overlay {
+            opacity: 1;
+        }
+
+        .play-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 20px rgba(229, 9, 20, 0.4);
+            transition: transform 0.3s;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .play-btn i {
+            font-size: 16px;
+            margin-left: 3px;
+        }
+
+        .movie-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
+        .movie-info {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* ═══════════════════════════════════════
+           МОДАЛЬНОЕ ОКНО С ВИДЕО (ПРЯМОУГОЛЬНОЕ)
+           ═══════════════════════════════════════ */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            transform: scale(0.95);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background: #000;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px; right: 20px;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: var(--accent);
+            transform: rotate(90deg);
+        }
+
+        .modal-info {
+            padding: 24px;
+        }
+
+        .modal-info h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .modal-meta {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 14px;
+        }
+
+        .modal-desc {
+            font-size: 15px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* ═══════════════════════════════════════
+           ФУТЕР
+           ═══════════════════════════════════════ */
+        .footer {
+            padding: 50px 4% 30px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 13px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* ═══════════════════════════════════════
+           АДАПТИВНОСТЬ (ПЛАНШЕТ)
+           ═══════════════════════════════════════ */
+        @media (max-width: 1024px) {
+            .hero { height: 65vh; padding-bottom: 40px; }
+            .hero-title { font-size: 42px; }
+            .movies-row { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+            .search-box input { width: 220px; }
+            .search-box input:focus { width: 260px; }
+        }
+
+        /* ═══════════════════════════════════════
+           АДАПТИВНОСТЬ (ТЕЛЕФОН)
+           ═══════════════════════════════════════ */
+        @media (max-width: 768px) {
+            .header { padding: 12px 4%; }
+            .logo-text { font-size: 20px; }
+            .logo-img { width: 32px; height: 32px; }
+
+            .hero { height: 55vh; padding: 0 4% 30px; }
+            .hero-title { font-size: 32px; line-height: 1.15; margin-bottom: 10px; }
+            .hero-meta { font-size: 13px; gap: 10px; margin-bottom: 12px; }
+            .hero-desc { font-size: 14px; line-height: 1.5; margin-bottom: 20px; }
+            .btn { padding: 10px 22px; font-size: 14px; }
+
+            .search-box input { width: 140px; padding: 8px 10px 8px 32px; font-size: 13px; }
+            .search-box input:focus { width: 170px; }
+            .search-box i { left: 10px; }
+
+            .ad-image { height: 130px; }
+            .ad-content { padding: 14px; max-width: 85%; }
+            .ad-title { font-size: 15px; }
+            .ad-subtitle { font-size: 12px; }
+
+            .type-tab { padding: 8px 16px; font-size: 13px; }
+            .category-btn { padding: 6px 14px; font-size: 12px; }
+
+            .section-title { font-size: 18px; }
+            .movies-row { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+            .movie-rating { padding: 4px 6px; font-size: 11px; top: 8px; right: 8px; }
+            .movie-overlay { padding: 12px; }
+            .movie-title { font-size: 13px; }
+            .movie-info { font-size: 11px; }
+            .play-btn { width: 36px; height: 36px; }
+            .play-btn i { font-size: 13px; }
+
+            .modal-overlay { padding: 16px; }
+            .modal-info { padding: 16px; }
+            .modal-info h2 { font-size: 18px; }
+            .modal-meta { font-size: 12px; }
+            .modal-desc { font-size: 13px; }
+            .modal-close { top: 12px; right: 12px; width: 38px; height: 38px; font-size: 16px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 26px; }
+            .hero { height: 50vh; }
+            .movies-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .search-box input { width: 120px; }
+            .search-box input:focus { width: 150px; }
+        }
+    
+        /* ═══════════════════════════════════════
+           КНОПКА "СМОТРЕТЬ ВМЕСТЕ" + "ПОДЕЛИТЬСЯ"
+           ═══════════════════════════════════════ */
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-share {
+            background: rgba(255,255,255,0.08);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .btn-share:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+
+        /* ═══════════════════════════════════════
+           МОДАЛЬНОЕ ОКНО "ПОДЕЛИТЬСЯ"
+           ═══════════════════════════════════════ */
+        .share-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .share-modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .share-modal-content {
+            width: 100%;
+            max-width: 480px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .share-modal-overlay.active .share-modal-content {
+            transform: scale(1);
+        }
+
+        .share-header {
+            padding: 24px 24px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .share-title {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .share-title i {
+            color: var(--accent);
+        }
+
+        .share-close {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .share-close:hover {
+            background: var(--accent);
+            transform: rotate(90deg);
+        }
+
+        .share-body {
+            padding: 20px 24px;
+        }
+
+        .share-section {
+            margin-bottom: 20px;
+        }
+
+        .share-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .share-link-box {
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 12px 14px;
+            align-items: center;
+        }
+
+        .share-link-box input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 13px;
+            font-family: 'Inter', monospace;
+            outline: none;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .share-link-box input::selection {
+            background: var(--accent);
+            color: white;
+        }
+
+        .share-copy-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .share-copy-btn:hover {
+            background: var(--accent-hover);
+            transform: scale(1.05);
+        }
+
+        .share-copy-btn.copied {
+            background: #30d158;
+        }
+
+        .share-actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .share-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 20px 16px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .share-action-btn:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .share-action-btn i {
+            font-size: 28px;
+            color: var(--accent);
+        }
+
+        .share-action-btn span {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .share-action-btn small {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .share-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.05);
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .hero-actions { gap: 8px; }
+            .btn { padding: 10px 18px; font-size: 13px; }
+            .share-modal-content { max-width: 100%; }
+            .share-actions-grid { grid-template-columns: 1fr; }
+            .card-actions { opacity: 1; padding: 8px 10px; }
+            .card-btn { font-size: 10px; padding: 6px 8px; }
+        }
+
+    
+        /* ═══════════════════════════════════════
+           КНОПКИ В МОДАЛЬНОМ ПЛЕЕРЕ
+           ═══════════════════════════════════════ */
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+
+        .modal-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .modal-btn-together {
+            background: linear-gradient(135deg, #0a84ff, #5856d6);
+            color: white;
+            box-shadow: 0 4px 20px rgba(10, 132, 255, 0.3);
+        }
+
+        .modal-btn-together:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(10, 132, 255, 0.4);
+        }
+
+        .modal-btn-share {
+            background: rgba(255,255,255,0.08);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .modal-btn-share:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .modal-actions { gap: 8px; margin-top: 14px; }
+            .modal-btn { padding: 8px 16px; font-size: 13px; }
+        }
+
+    
+        /* ═══════════════════════════════════════
+           ГАЙД: КАК ИЗБЕЖАТЬ БЛОКИРОВКИ РЕКЛАМЫ
+           ═══════════════════════════════════════ */
+        .ad-guide-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 22px;
+            border-radius: 100px;
+            background: linear-gradient(135deg, #e50914, #ff375f);
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(229, 9, 20, 0.4);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+        .ad-guide-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(229, 9, 20, 0.5);
+        }
+
+        .ad-guide-btn i {
+            font-size: 16px;
+        }
+
+        .ad-guide-btn.pulse {
+            animation: adGuidePulse 2s infinite;
+        }
+
+        @keyframes adGuidePulse {
+            0% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(229, 9, 20, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0); }
+        }
+
+        .guide-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.92);
+            backdrop-filter: blur(20px);
+            z-index: 5000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .guide-modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .guide-modal-content {
+            width: 100%;
+            max-width: 640px;
+            max-height: 85vh;
+            overflow-y: auto;
+            background: var(--bg-card);
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.1) transparent;
+        }
+
+        .guide-modal-overlay.active .guide-modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .guide-modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .guide-modal-content::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.15);
+            border-radius: 3px;
+        }
+
+        .guide-header {
+            padding: 28px 28px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            z-index: 10;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .guide-title {
+            font-size: 22px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #ff375f, #ff9f0a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .guide-title i {
+            font-size: 24px;
+            background: linear-gradient(135deg, #e50914, #ff375f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .guide-close {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .guide-close:hover {
+            background: var(--accent);
+            transform: rotate(90deg);
+        }
+
+        .guide-body {
+            padding: 24px 28px 32px;
+        }
+
+        .guide-intro {
+            font-size: 15px;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 24px;
+            padding: 16px 20px;
+            background: rgba(229, 9, 20, 0.08);
+            border-radius: 16px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .guide-step {
+            margin-bottom: 24px;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.04);
+            transition: all 0.3s;
+        }
+
+        .guide-step:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(229, 9, 20, 0.15);
+            transform: translateX(4px);
+        }
+
+        .guide-step-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .guide-step-num {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #e50914, #ff375f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 15px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .guide-step-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .guide-step-desc {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-muted);
+            padding-left: 50px;
+        }
+
+        .guide-step-desc strong {
+            color: rgba(255,255,255,0.9);
+            font-weight: 600;
+        }
+
+        .guide-tip {
+            margin-top: 20px;
+            padding: 16px 20px;
+            background: rgba(10, 132, 255, 0.08);
+            border-radius: 16px;
+            border-left: 3px solid #0a84ff;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .guide-tip i {
+            font-size: 20px;
+            color: #0a84ff;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .guide-tip-text {
+            font-size: 14px;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .guide-tip-text strong {
+            color: #0a84ff;
+        }
+
+        .guide-footer {
+            margin-top: 8px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+
+        .guide-footer-text {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .guide-footer-text i {
+            color: var(--accent);
+            margin: 0 4px;
+        }
+
+        @media (max-width: 768px) {
+            .ad-guide-btn {
+                bottom: 16px;
+                right: 16px;
+                padding: 12px 18px;
+                font-size: 13px;
+            }
+            .ad-guide-btn span {
+                display: none;
+            }
+            .guide-modal-content {
+                max-width: 100%;
+                max-height: 90vh;
+                border-radius: 20px;
+            }
+            .guide-header {
+                padding: 20px 20px 16px;
+            }
+            .guide-title {
+                font-size: 18px;
+            }
+            .guide-body {
+                padding: 16px 20px 24px;
+            }
+            .guide-step-desc {
+                padding-left: 0;
+                margin-top: 10px;
+            }
+            .guide-step-header {
+                align-items: flex-start;
+            }
+    }
+
+        /* ═══════════════════════════════════════
+           ⚡ ОПТИМИЗАЦИЯ ПРОИЗВОДИТЕЛЬНОСТИ
+           ═══════════════════════════════════════ */
+
+        /* Отключаем hover-эффекты на тач-устройствах */
+        @media (hover: none) and (pointer: coarse) {
+            .movie-card:hover {
+                transform: none !important;
+                box-shadow: none !important;
+            }
+            .movie-card:hover .movie-poster {
+                transform: none !important;
+            }
+            .movie-overlay {
+                opacity: 1 !important;
+                background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%) !important;
+            }
+            .play-btn { display: none !important; }
+        }
+
+        /* Упрощаем тени для всех устройств */
+        .movie-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+        }
+
+        /* GPU-ускорение только для модалок */
+        .modal-content,
+        .guide-modal-content,
+        .share-modal-content {
+            will-change: transform;
+        }
+
+        /* Убираем will-change с неанимируемых элементов */
+        .hero-bg-blur {
+            will-change: auto !important;
+        }
+
+        /* Упрощаем пульсацию кнопки гайда */
+        @keyframes adGuidePulse {
+            0% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0.3); }
+            70% { box-shadow: 0 0 0 12px rgba(229, 9, 20, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0); }
+        }
+
+        /* Мобильные оптимизации */
+        @media (max-width: 768px) {
+            .header { 
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                background: rgba(10,10,10,0.95) !important;
+            }
+            .hero-bg-blur {
+                filter: brightness(0.3) !important;
+            }
+            .hero-desc {
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+        }
+</style>
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="color-scheme" content="dark">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://avatars.mds.yandex.net">
+<base target="_blank">
+</head>
+<body>
+
+    <!-- Шапка с лого -->
+    <header class="header" id="header">
+        <a href="#" class="logo" aria-label="QuorKick — Главная">
+            <img src="https://avatars.dzeninfra.ru/get-zen_brief/271828/pub_699d0ecd64a8661012e09dcc_699d0edbb9136848054abe8d/scale_1200" alt="QuorKick" class="logo-img" id="logoImg">
+            <span class="logo-text">QuorKick</span>
+        </a>
+        <div class="search-box">
+            <i class="fas fa-search" aria-hidden="true"></i>
+            <input type="text" placeholder="Поиск..." id="searchInput" aria-label="Поиск фильмов">
+        </div>
+        <a href="https://t.me/QuorvoxTeam" target="_blank" class="tg-btn" arial-label="Telegram">
+            <i class="fab fa-telegram" aria-hidden="true"></i>
+            <span>Telegram</span>
+        </a>
+    </header>
+
+    <!-- ГЛАВНЫЙ БАННЕР -->
+    <section class="hero" id="heroSection">
+        <div class="hero-bg-blur" id="heroBgBlur" aria-hidden="true"></div>
+        <div class="hero-content">
+            <h1 class="hero-title" id="heroTitle">Интерстеллар</h1>
+            <div class="hero-meta">
+                <span class="rating"><i class="fas fa-star" aria-hidden="true"></i> <span id="heroRating">8.6</span></span>
+                <span id="heroYear">2014</span>
+                <span id="heroGenre">Фантастика, Драма</span>
+                <span id="heroDuration">169 мин</span>
+            </div>
+            <p class="hero-desc" id="heroDesc">
+                Когда засуха приводит человечество к продовольственному кризису, 
+                коллектив исследователей отправляется сквозь червоточину, 
+                чтобы найти новый дом для человечества.
+            </p>
+            <button class="btn btn-primary" id="heroBtn" type="button">
+                    <i class="fas fa-play" aria-hidden="true"></i> Смотреть
+                </button>
+        </div>
+    </section>
+
+    <!-- РЕКЛАМНЫЙ БАННЕР -->
+    <section class="ad-section">
+        <div class="ad-banner" onclick="window.open('https://t.me/VSPBOOST', '_blank')" role="button" tabindex="0" aria-label="Реклама">
+            <img src="https://i.ibb.co/2Y33TG5M/image.jpg" alt="Реклама" class="ad-image" id="adImage" loading="lazy">
+            <div class="ad-gradient"></div>
+            <div class="ad-content">
+                <span class="ad-label">Реклама</span>
+                <div class="ad-title" id="adTitle">Советуем VSPBOOST</div>
+                <div class="ad-subtitle" id="adSubtitle">Переходи в Telegram для качественного VPN!</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- РАЗДЕЛИТЕЛЬ ТИПОВ: Фильмы / Мультики / Аниме / Дорамы -->
+    <div class="type-tabs" role="tablist" aria-label="Типы контента">
+        <button class="type-tab active" data-type="all" role="tab" aria-selected="true" type="button">
+            <i class="fas fa-film"></i> Все
+        </button>
+        <button class="type-tab" data-type="movie" role="tab" aria-selected="false" type="button">
+            <i class="fas fa-film"></i> Фильмы
+        </button>
+        <button class="type-tab" data-type="cartoon" role="tab" aria-selected="false" type="button">
+            <i class="fas fa-paw"></i> Мультики
+        </button>
+        <button class="type-tab" data-type="anime" role="tab" aria-selected="false" type="button">
+            <i class="fas fa-dragon"></i> Аниме
+        </button>
+        <button class="type-tab" data-type="dorama" role="tab" aria-selected="false" type="button">
+            <i class="fas fa-heart"></i> Дорамы
+        </button>
+        <button class="type-tab" data-type="video" role="tab" aria-selected="false" type="button">
+            <i class="fas fa-heart"></i> Видео
+        </button>
+    </div>
+
+    <!-- КНОПКИ КАТЕГОРИЙ ЖАНРОВ -->
+    <div class="categories" role="tablist" aria-label="Категории фильмов">
+        <button class="category-btn active" role="tab" aria-selected="true" type="button">Все</button>
+        <button class="category-btn" role="tab" aria-selected="false" type="button">Боевики</button>
+        <button class="category-btn" role="tab" aria-selected="false" type="button">Комедии</button>
+        <button class="category-btn" role="tab" aria-selected="false" type="button">Ужасы</button>
+        <button class="category-btn" role="tab" aria-selected="false" type="button">Фантастика</button>
+        <button class="category-btn" role="tab" aria-selected="false" type="button">Драмы</button>
+        <button class="category-btn" role="tab" aria-selected="false" type="button">Видео</button>
+    </div>
+
+    <!-- МЕСТО ДЛЯ ФИЛЬМОВ -->
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title" id="sectionTitle">🎬 Все</h2>
+        </div>
+        <div class="movies-row" id="moviesContainer"></div>
+    </section>
+
+    <!-- ФУТЕР -->
+    <footer class="footer">
+        <div class="footer-logo"><i class="fas fa-film" aria-hidden="true"></i> QuorKick</div>
+        <p class="footer-text">Смотри видео с VK видео! Наслаждайся!</p>
+    </footer>
+
+    <!-- МОДАЛЬНОЕ ОКНО С ПЛЕЕРОМ -->
+    <div class="modal-overlay" id="videoModal" role="dialog" aria-modal="true" aria-label="Видеоплеер">
+        <button class="modal-close" onclick="closeModal()" type="button" aria-label="Закрыть плеер">
+            <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+        <div class="modal-content">
+            <div class="video-wrapper" id="videoWrapper"></div>
+            <div class="modal-info">
+                <h2 id="modalTitle">Название</h2>
+                <div class="modal-meta" id="modalMeta">Жанр • Год</div>
+                <p class="modal-desc" id="modalDesc">Описание</p>
+                <div class="modal-actions">
+                    <button class="modal-btn modal-btn-together" id="modalTogetherBtn" type="button">
+                        <i class="fas fa-users" aria-hidden="true"></i> Смотреть вместе
+                    </button>
+                    <button class="modal-btn modal-btn-share" id="modalShareBtn" type="button">
+                        <i class="fas fa-share-alt" aria-hidden="true"></i> Поделиться
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════
+        // МАССИВ ФИЛЬМОВ — добавлено поле type: movie/cartoon/anime/dorama
+        // ═══════════════════════════════════════════════════════
+        const moviesData = [
+            {
+                title: "Goat: Мечтай по крупному",
+                year: "2026", rating: "7.4",
+                genre: "Мультфильм, анимация, комедия", duration: "100 мин",
+                type: "cartoon",
+                image: "https://cdn.mirage.ru/images/film/7000/big/s7264.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456248358",
+                desc: "Козёл Уилл Харрис получает уникальный шанс стать профессионалом в звероболе.",
+                tags: "#семейное #длядетей #мультфильм"
+            },
+            {
+                title: "Интерстеллар",
+                year: "2014", rating: "8.4",
+                genre: "Боевик, Фильм, Фантастика", duration: "169 мин",
+                type: "movie",
+                image: "https://avatars.mds.yandex.net/i?id=55f1b3dca1546f233f96217db0b4a27523c89f60-5600088-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456243270&hash=6abac71e93f2b859&hd=4",
+                desc: "Когда засуха приводит человечество к продовольственному кризису, коллектив исследователей отправляется сквозь червоточину.",
+                tags: "#Приключения #Драма #Фантастика"
+            },
+            {
+                title: "Восстание зловещих мертвецов (2023)",
+                year: "2023", rating: "6.7",
+                genre: "Ужасы", duration: "96 мин",
+                type: "movie",
+                image: "https://avatars.mds.yandex.net/get-kinopoisk-image/4774061/1a464749-6adb-4e78-bf78-55a671d5f452/1920x",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456248513&hash=8223862e58efb1da&hd=4",
+                desc: "Попав в сложную жизненную ситуацию, Бет приезжает в Лос-Анджелес к старшей сестре Элли.",
+                tags: "#Ужасы"
+            },
+            {
+                title: "Дьявол носит Prada",
+                year: "2006", rating: "7.7",
+                genre: "Драма, Комедия", duration: "109 мин",
+                type: "movie",
+                image: "https://static.kinoafisha.info/k/movie_posters/1920x1080/upload/movie_posters/8/6/5/776568/993899451653464573.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456239433&hash=20094b35db423e70&hd=4",
+                desc: "Провинциалка Энди, мечтающая о журналистике, становится помощницей деспотичного редактора модного глянца.",
+                tags: "#драма #Комедия"
+            },
+            {
+                title: "Дьявол носит Prada 2",
+                year: "2026", rating: "6.9",
+                genre: "Комедии, Драма", duration: "154 мин",
+                type: "movie",
+                image: "https://www.kino-teatr.ru/movie/poster/200846/273735.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456248510&hash=4b8892e9fe04bd33&hd=4",
+                desc: "Редактор модного журнала Миранда Пристли борется за рекламные контракты со своей бывшей помощницей Эмили Чарлтон.",
+                tags: "#Комедии #Драма"
+            },
+            {
+                title: "Бойцовский клуб (1999)",
+                year: "1999", rating: "8.8",
+                genre: "Драма", duration: "139 мин",
+                type: "movie",
+                image: "https://avatars.mds.yandex.net/i?id=9f960a6a9f29988fcbb505c221d7d4d8_l-5559510-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-218359460&id=456244531&hash=a1296fefb5037911&hd=4",
+                desc: "Офисный работник создаёт подпольный клуб.",
+                tags: "#драма #культовый"
+            },
+            {
+                title: "Вершина",
+                year: "2026", rating: "6.5",
+                genre: "Триллер, Боевик", duration: "95 мин",
+                type: "movie",
+                image: "https://dnm.nflximg.net/api/v6/2DuQlx0fM4wd1nzqm5BFBi6ILa8/AAAAQUwj9AqdFtg1LWs5omQmQ06h3a6_SGkGBw9CNwhMvWqcW7h0-Xndr8tQqIqtcj0Osd8sNfwK9CEWoJeefPRENQsBtd-zKZxLCu-2hskcFAfXiMG89G-7AkVkW6zma9NzRqCnRK99CMTMUQ5iY1QgM2NYU6s.jpg?r=489",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456248491&hash=0ef9ec8b8a3ca2ee&hd=4",
+                desc: "Экстремалка Саша переживает смерть близкого и отправляется в одиночное путешествие по Австралии.",
+                tags: "#Триллер #эпик"
+            },
+            {
+                title: "Головоломка",
+                year: "2015", rating: "8.1",
+                genre: "Мультфильм", duration: "95 мин",
+                type: "cartoon",
+                image: "https://avatars.mds.yandex.net/get-mpic/16413278/2a000001972d215ac75539f26d46ad81bf33/orig",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456241005&hash=3383782c418d4c36&hd=4",
+                desc: "В голове у обычной 11-летней школьницы Райли живут пять базовых эмоций.",
+                tags: "#мультфильм #Комедии"
+            },
+            {
+                title: "Пацан против всех",
+                year: "2023", rating: "6.5",
+                genre: "Боевик", duration: "95 мин",
+                type: "movie",
+                image: "https://avatars.mds.yandex.net/get-mpic/10096780/2a00000196fd3e4cf091aae9979806f71359/orig",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456243132&hash=0b47b47c73a545de&hd=4",
+                desc: "Парень теряет семью, слух и голос из-за коррумпированной династии Ван Дер Кой.",
+                tags: "#Комедии #Боевик"
+            },
+            {
+                title: "Дикий робот",
+                year: "2024", rating: "8.4",
+                genre: "приключения, фантастика, семейный, мультфильм", duration: "102 мин",
+                type: "cartoon",
+                image: "https://ir.ozone.ru/s3/multimedia-1-u/7179347946.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456248213&hash=79d805fe3eb41747&hd=4",
+                desc: "Робот-помощник ROZZUM 7134 случайно раздавливает семью гусёнка.",
+                tags: "#Фантастика #мультфильм"
+            },
+            {
+                title: "Мой пингвин",
+                year: "2024", rating: "6.8",
+                genre: "Приключения", duration: "97 мин",
+                type: "movie",
+                image: "https://www.kino-teatr.ru/movie/poster/182543/217203.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456243119&hash=aad8cbd9d5f65ed2&hd=4",
+                desc: "Однажды рыбак, убитый горем, находит молодого пингвинёнка, который отбился от своей стаи.",
+                tags: "#Драма #Приключения"
+            },
+            {
+                title: "Перл-Харбор",
+                year: "2001", rating: "7.8",
+                genre: "Драма", duration: "183 мин",
+                type: "movie",
+                image: "https://basket-12.wbbasket.ru/vol1882/part188200/188200656/images/big/1.webp",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456240004&hash=e051b501aa873dd5&hd=4",
+                desc: "Два друга-лётчика теряют мирную жизнь после внезапной атаки японской авиации на Пёрл-Харбор.",
+                tags: "#драма #История"
+            },
+            {
+                title: "Перевозчик (2002)",
+                year: "2002", rating: "7.8",
+                genre: "Боевик", duration: "93 мин",
+                type: "movie",
+                image: "https://avatars.mds.yandex.net/i?id=131654b48750e66e51068e227fdb6c9a_l-5520851-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456239073&hash=7ef76b184f0f6937&hd=4",
+                desc: "Доставщик грузов нарушает главное правило и находит в мешке дочь мафиози.",
+                tags: "#драма #Боевик"
+            },
+            {
+                title: "Сила воли",
+                year: "2016", rating: "7.1",
+                genre: "Драма", duration: "134 мин",
+                type: "movie",
+                image: "https://avatars.mds.yandex.net/i?id=7533ee02a627088226f7898974e2f915_l-5354114-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456244950&hash=c14d60e74162ef46&hd=4",
+                desc: "Победа чернокожего атлета Джесси Оуэнса на Олимпиаде-1936 в Берлине.",
+                tags: "#драма #биография"
+            },
+            {
+                title: "Грандиозная подделка",
+                year: "2025", rating: "6.6",
+                genre: "Драма", duration: "116 мин",
+                type: "movie",
+                image: "https://avatars.mds.yandex.net/i?id=0a0d7f77d5118c577c78264ab444be39_l-11080322-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456248303&hash=32ba9e4f2d665191&hd=4",
+                desc: "Итальянский криминальный драматический фильм 2025 года.",
+                tags: "#драма #крименал"
+            },
+            {
+                title: "Акула 1 сезон",
+                year: "2025", rating: "4.6",
+                genre: "Дорама", duration: "139 мин",
+                type: "dorama",
+                image: "https://avatars.mds.yandex.net/get-mpic/12503234/2a0000019bbabcddc399fbc4f7007b8e7ced/orig",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-213350128&id=456240620&hash=9123d33478577287&hd=4",
+                desc: "После тюрьмы боец ММА Чха У-соль сталкивается с криминальным авторитетом из прошлого и вынужден сражаться за себя и своих близких.",
+                tags: "#Боевик #крименал"
+            },
+            {
+                title: "Акула: Начало",
+                year: "2021", rating: "7.6",
+                genre: "Драма", duration: "108 мин",
+                type: "dorama",
+                image: "https://avatars.mds.yandex.net/get-kinopoisk-image/1898899/81934b51-8399-4114-874e-8bf02317cd5c/600x900",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-213350128&id=456240826&hash=dc5f5da548fc57dc&hd=4",
+                desc: "Школьник Чха У-соль, защищаясь, выкалывает ручкой глаз обидчику-боксёру и садится в тюрьму. Там он учится боевым искусствам у заключённого чемпиона, пока на свободе его ждёт жаждущий мести враг.",
+                tags: "#драма #крименал"
+            },
+            {
+                title: "Побег из Шоушенка",
+                year: "1994", rating: "9.3",
+                genre: "Драма", duration: "142 мин",
+                type: "movie",
+                image: "https://ir.ozone.ru/s3/multimedia-a/6642802774.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456243258&hash=cd908d8e7c7b6dc0&hd=4",
+                desc: "Невинно осуждённый бухгалтер Энди Дюфрейн в тюрьме «Шоушенк» благодаря уму и душевной чуткости завоёвывает уважение и заключённых, и охраны.",
+                tags: "#драма #крименал"
+            },
+            {
+                title: "Кунг-фу Панда",
+                year: "2008", rating: "7.6",
+                genre: "Мультфильм", duration: "91 мин",
+                type: "cartoon",
+                image: "https://avatars.mds.yandex.net/get-kinopoisk-image/1773646/713ef614-e190-4fbd-9c68-0e2b974be29a/1920x",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456243495&hash=2ca3715f10f22275&hd=4",
+                desc: "Неуклюжий панда По — последняя надежда Долины Мира против мастера Тай Лунга. Секрет победы — в вере в себя.",
+                tags: "#мультфильм #Боевик"
+            },
+            {
+                title: "Кунг-фу Панда 2",
+                year: "2011", rating: "7.3",
+                genre: "Мультфильм", duration: "91 мин",
+                type: "cartoon",
+                image: "https://basket-18.wbbasket.ru/vol2959/part295922/295922784/images/big/1.webp",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-231729433&id=456240720&hash=6eabab0d3ed7c994&hd=3",
+                desc: "Неуклюжий панда По — стал воином дракона!",
+                tags: "#мультфильм #Боевик"
+            },
+            {
+                title: "Кунг-фу Панда 3",
+                year: "2016", rating: "7.6",
+                genre: "Мультфильм", duration: "95 мин",
+                type: "cartoon",
+                image: "https://avatars.mds.yandex.net/i?id=c7736255343565329096cab8fa4b703a_l-16514006-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456239961&hash=f80ed37176b1de12&hd=4",
+                desc: "Воин дракона, панда ПО, но это 3 часть",
+                tags: "#мультфильм #Боевик"
+            },
+            {
+                title: "ОДИНОЧЕСТВО НА ДВОИХ – Все серии подряд",
+                year: "2010", rating: "3.3",
+                genre: "Аниме", duration: "300 мин",
+                type: "anime",
+                image: "https://media.kg-portal.ru/anime/y/yosuganosora/production/yosuganosora_7.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-194238253&id=456241177&hash=a5cc250cf73cc627&hd=3",
+                desc: "Сироты-близнецы бегут от прошлого в враждебную горную деревню.",
+                tags: "#мультфильм #Боевик"
+            },
+            {
+                title: "СИЛЬНЕЙШИЙ МУДРЕЦ НИЗШЕЙ ЭМБЛЕМЫ – Все серии подряд",
+                year: "2022", rating: "3.6",
+                genre: "Аниме", duration: "250 мин",
+                type: "anime",
+                image: "https://www.kino-teatr.ru/movie/poster/159687/139449.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-194238253&id=456240709&hash=1c97f73b0e7939cc&hd=3",
+                desc: "Сильнейший из слабейших",
+                tags: "#мультфильм #Боевик"
+            },
+            {
+                title: "Кунг-фу Панда 4",
+                year: "2024", rating: "6.3",
+                genre: "Мультфильм", duration: "94 мин",
+                type: "cartoon",
+                image: "https://kino-static.tricolor.ru/upload/medialibrary/860/k62t53kxyptd0gidk1jl3oaou3ov6al2.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-76765497&id=456241146&hash=164ceb785442955c&hd=3",
+                desc: "По обучает нового Воина Дракона, а колдунья воскрешает его старых врагов.",
+                tags: "#мультфильм #Фантастика"
+            },
+            {
+                title: "Зеленая книга",
+                year: "2018", rating: "8.2",
+                genre: "Драма", duration: "130 мин",
+                type: "movie",
+                image: "https://kupi-vse.ru/wa-data/public/shop/products/24/61/16124/images/16620/16620.750x0.jpeg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456243247&hash=8a124876526a3284&hd=4",
+                desc: "Вышибала Тони нанят водителем к чёрному пианисту Дону Ширли в турне по Югу.",
+                tags: "#Драма #Комедии"
+            },
+            {
+                title: "ТОП 20 лучших эйсов киберспортсменов за 2025 год. CS2",
+                year: "2025", rating: "ИГРА",
+                genre: "Видео", duration: "11 мин",
+                type: "video",
+                image: "https://images.cybersport.ru/images/as-is/plain/8d/8d638a03-5bc1-45f7-800c-cf9b3b9d34ad.png",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-67433146&id=456516387&hash=650a8cd1f0db5821&hd=4",
+                desc: "20 лучших ЭЙСОВ от Pro-игроков 2025 года на сцене Cs2",
+                tags: "#Cs2 #Игры #Видео"
+            },
+            {
+                title: "Пеле: Рождение легенды",
+                year: "2015", rating: "7.4",
+                genre: "Спорт, Драма, биография", duration: "107 мин",
+                type: "movie",
+                image: "https://static.kion.ru/content/mts/movies/70002066/posters/VERTICAL_58164c25be0c9f8a1e001a8dcf4f32c4.webp?x=490&y=10&ar=keep",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456243949&hash=fd26cbb56d4d9b18&hd=4",
+                desc: "История стремительного восхождения талантливого мальчика Пеле из трущоб Сан-Паулу - от дворовой босоногой команды до победы на Чемпионате мира.",
+                tags: "#Спорт #биография #Драма"
+            },
+            {
+                title: "Миньоны",
+                year: "2015", rating: "6.4",
+                genre: "мультфильм, фантастика", duration: "91 мин",
+                type: "cartoon",
+                image: "https://avatars.mds.yandex.net/i?id=a554ee052bddf015c6e246e3130a7f49_l-5673334-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456243595&hash=cfe63f883f8730a1&hd=4",
+                desc: "Миньоны веками ищут самого гадкого хозяина. Перебрав динозавров, фараонов, Дракулу и Наполеона, они отправляются в Нью-Йорк к суперзлодейке Скарлет Оверкилл. Их ждут власть, деньги и бананы.",
+                tags: "#мультфильм, #фантастика, #комедия"
+            },
+            {
+                title: "Миньоны: Грювитация",
+                year: "2022", rating: "6.5",
+                genre: "мультфильм, фантастика", duration: "87 мин",
+                type: "cartoon",
+                image: "https://basket-28.wbbasket.ru/vol5238/part523858/523858402/images/big/1.webp",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456240593&hash=8a5ad1c734bc903c&hd=4",
+                desc: "Миллион лет миньоны искали самого великого и ужасного предводителя, пока не встретили ЕГО. Знакомьтесь — Грю. Пусть он еще очень молод, но у него в планах по-настоящему гадкие дела, которые заставят планету содрогнуться.",
+                tags: "#мультфильм, #фантастика, #комедия"
+            },
+            {
+                title: "Гадкий Я",
+                year: "2010", rating: "7.8",
+                genre: "мультфильм, фантастика", duration: "95 мин",
+                type: "cartoon",
+                image: "https://avatars.mds.yandex.net/i?id=f0740eecead039541e8a6ab74e01a7c8_l-5231735-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456239734&hash=e54a49b9ec747474&hd=4",
+                desc: "Миньоны веками ищут самого гадкого хозяина. Перебрав динозавров, фараонов, Дракулу и Наполеона, они отправляются в Нью-Йорк к суперзлодейке Скарлет Оверкилл. Их ждут власть, деньги и бананы.",
+                tags: "#мультфильм, #фантастика, #комедия"
+            },
+            {
+                title: "Гадкий Я 2",
+                year: "2013", rating: "7.5",
+                genre: "мультфильм, приключения, комедия", duration: "98 мин",
+                type: "cartoon",
+                image: "https://avatars.mds.yandex.net/i?id=ca1fc11f69b94a30fa9f1b22a3b14fb6-5346024-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456240478&hash=7d166faa32e31a70&hd=4",
+                desc: "Миньоны веками ищут самого гадкого хозяина. Перебрав динозавров, фараонов, Дракулу и Наполеона, они отправляются в Нью-Йорк к суперзлодейке Скарлет Оверкилл. Их ждут власть, деньги и бананы.",
+                tags: "#мультфильм, #фантастика, #комедия"
+            },
+            {
+                title: "Гадкий Я 3",
+                year: "2017", rating: "6.3",
+                genre: "мультфильм, приключения, комедия", duration: "89 мин",
+                type: "cartoon",
+                image: "https://avatars.mds.yandex.net/get-mpic/15992133/2a00000196fd38966909393ce5f7f55e19ed/orig",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-230695329&id=456239059&hash=d43a7d656811ed74&hd=4",
+                desc: "Миньоны веками ищут самого гадкого хозяина. Перебрав динозавров, фараонов, Дракулу и Наполеона, они отправляются в Нью-Йорк к суперзлодейке Скарлет Оверкилл. Их ждут власть, деньги и бананы.",
+                tags: "#мультфильм, #фантастика, #комедия"
+            },
+            {
+                title: "Гадкий Я 4",
+                year: "2024", rating: "6.3",
+                genre: "мультфильм, приключения, комедия", duration: "94 мин",
+                type: "cartoon",
+                image: "https://avatars.mds.yandex.net/i?id=088732d5f5e8ea9409eacc15e7ba14e2_l-6909092-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-209993893&id=456239157&hash=1d4b5bb3c463fd78&hd=4",
+                desc: "Миньоны веками ищут самого гадкого хозяина. Перебрав динозавров, фараонов, Дракулу и Наполеона, они отправляются в Нью-Йорк к суперзлодейке Скарлет Оверкилл. Их ждут власть, деньги и бананы.",
+                tags: "#мультфильм, #фантастика, #комедия"
+            },
+            {
+                title: "Банана: Миньоны",
+                year: "2010", rating: "6.8",
+                genre: "мультфильм, приключения, комедия", duration: "3 мин",
+                type: "cartoon",
+                image: "https://m.media-amazon.com/images/M/MV5BMGFlZjI4NTUtMjI2Mi00ODc4LWI5MjYtM2IyYjRkZDIzMGQ1XkEyXkFqcGc@._V1_.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-130045726&id=456241144&hash=7f44820ce27b9eda&hd=4",
+                desc: "Миньоны работаю на дядю Грю, не поделили банан.",
+                tags: "#мультфильм, #фантастика, #комедия"
+            },
+            {
+                title: "Миньоны против газона",
+                year: "2016", rating: "6.8",
+                genre: "мультфильм, приключения, комедия", duration: "4 мин",
+                type: "cartoon",
+                image: "https://images.justwatch.com/poster/330363483/s718/mower-minions.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-130045726&id=456243525&hash=9674311c09f77696&hd=2",
+                desc: "Миньоны хотят купить блендер, чтобы делать банановый сок. В копилке денег на покупку не хватает, и они решают заработать недостающую сумму...",
+                tags: "#мультфильм, #фантастика, #комедия"
+            },
+            {
+                title: "Ознакомительный день",
+                year: "2010", rating: "7.0",
+                genre: "мультфильм, приключения, комедия", duration: "4 мин",
+                type: "cartoon",
+                image: "https://www.kino-teatr.ru/movie/poster/155573/128738.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-176294899&id=456242662&hash=6fc8140ef7caf851&hd=4",
+                desc: "Миньоны-новички проходят подробный инструктаж по технике безопасности в лаборатории Грю.",
+                tags: "#мультфильм, #фантастика, #комедия"
+            },
+            {
+                title: "Преображение дома",
+                year: "2010", rating: "7.0",
+                genre: "мультфильм, приключения, комедия", duration: "5 мин",
+                type: "cartoon",
+                image: "https://media.myshows.me/movies/normal/d/3e/d3e544d4b19875b082e36a4c7f2203f2.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-230238587&id=456239211&hash=d69ef120809d5fc5&hd=4",
+                desc: "Социальный работник желает убедиться, что дом Грю подходит для проживания детей.",
+                tags: "#мультфильм, #фантастика, #комедия"
+            },
+            {
+                title: "Миньоны: Мини-фильмы. Соревнование",
+                year: "2015", rating: "7.0",
+                genre: "мультфильм, приключения, комедия", duration: "3 мин",
+                type: "cartoon",
+                image: "https://avatars.mds.yandex.net/i?id=96607490448aa4921820e6580da1e7010fd982c4-4390935-images-thumbs&n=13",
+                videoUrl: "https://vk.com/video_ext.php?oid=-83600764&id=171431513&hash=43241224795f2b63&hd=3",
+                desc: "Два миньона устраивают соревнования..",
+                tags: "#мультфильм, #фантастика, #комедия"
+            },
+            {
+                title: "Миньоны-скауты",
+                year: "2019", rating: "7.2",
+                genre: "мультфильм, приключения, комедия", duration: "4 мин",
+                type: "cartoon",
+                image: "https://avatars.mds.yandex.net/i?id=da795fa8ee5957435fe7afaa6fafa5ba_l-12892887-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-212926427&id=456244170&hash=4595c4a5cf6f741f&hd=4",
+                desc: "Когда Марго, Агнес и Эдит возвращаются из лагеря скаутов, трое миньонов очарованы скаутскими значками, полученными девочками. Миньоны решают отправиться в лагерь, чтобы получить значки.",
+                tags: "#мультфильм, #фантастика, #комедия"
+            },
+            {
+                title: "Миньоны: Желтый - хит сезона",
+                year: "2018", rating: "6.5",
+                genre: "мультфильм, приключения, комедия", duration: "4 мин",
+                type: "cartoon",
+                image: "https://www.film.ru/sites/default/files/movies/posters/_imported/4lx8u3QZQN9yTuGLHrzSeR7QCQY.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-130045726&id=456251566&hash=f536014190b853e7&hd=4",
+                desc: "Двое миньонов совершают побег из тюрьмы.",
+                tags: "#мультфильм, #фантастика, #комедия"
+            },
+            {
+                title: "Сваты: все серии",
+                year: "2020", rating: "8.5",
+                genre: "драма, комедия", duration: "1 740 мин",
+                type: "movie",
+                image: "https://resizer.mail.ru/p/3b632b74-b384-5655-8459-20cda0d6b5d6/AQACZ6Vg2hbOK-DYINFmwVe_sB47m4l-Ut9pnf8MpBCerLIc67lDwSricLSON60E0XIbkVtHOiF5ic2zguuAl-UvSKI.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-136020824&id=456251932&hash=c82d9620b2120aa2&hd=3",
+                desc: "Сваты - культовая класика всех времен.",
+                tags: "#Боевик #фантастика, #комедия"
+            },
+            {
+                title: "1+1 (Неприкасаемые) ",
+                year: "2011", rating: "8.5",
+                genre: "драма, комедия", duration: "112 мин",
+                type: "movie",
+                image: "https://static.kino.1tv.ru/cdn/772/poster.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-226892798&id=456239049&hash=ff24da1e3c689c23&hd=4",
+                desc: "Пострадав в результате несчастного случая, богатый аристократ Филипп нанимает в помощники человека, который менее всего подходит для этой работы, – молодого жителя предместья Дрисса, только что освободившегося из тюрьмы. Несмотря на то, что Филипп прикован к инвалидному креслу, Дриссу удается привнести в размеренную жизнь аристократа дух приключений.",
+                tags: "#Драма, #комедия"
+            },
+            {
+                title: "История игрушек",
+                year: "1995", rating: "8.3",
+                genre: "мультфильм, приключения, комедия", duration: "81 мин",
+                type: "cartoon",
+                image: "https://avatars.mds.yandex.net/i?id=882ba17e3598b7fbfd53605db67f8766_l-5428804-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-226802088&id=456261230&hash=78c7f12f8b981be9&hd=4",
+                desc: "Игрушки Энди начинают жить своей жизнью, как только он выходит из комнаты. В день рождения мальчика царит паника .",
+                tags: "#мультфильм, #комедия"
+            },
+            {
+                title: "История игрушек 2",
+                year: "1999", rating: "7.9",
+                genre: "мультфильм, приключения, комедия", duration: "85 мин",
+                type: "cartoon",
+                image: "https://upload.wikimedia.org/wikipedia/ru/thumb/c/c0/Toy_Story_2.jpg/500px-Toy_Story_2.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-226802088&id=456261227&hash=01d8bedd3b28ef15&hd=3",
+                desc: "Похищенный Вуди должен выбрать: сиять в музее или вернуться к Энди, пока Базз и игрушки спасают его.",
+                tags: "#мультфильм, #комедия"
+            },
+            {
+                title: "История Игрушек 3: Большой побег",
+                year: "2010", rating: "8.3",
+                genre: "мультфильм, приключения, комедия", duration: "103 мин",
+                type: "cartoon",
+                image: "https://static.wikia.nocookie.net/disneyfanon/images/6/69/Toy_Story_3_poster.jpg/revision/latest?cb=20201121045519",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-226802088&id=456261228&hash=57bc8fe013188dfd&hd=4",
+                desc: "Энди уезжает в колледж, и игрушки во главе с Вуди и Баззом гадают, ждёт ли их чердак, свалка или детский сад.",
+                tags: "#мультфильм, #комедия"
+            },
+            {
+                title: "Стальной гигант",
+                year: "1999", rating: "8.5",
+                genre: "мультфильм, приключения, комедия", duration: "86 мин",
+                type: "cartoon",
+                image: "https://avatars.mds.yandex.net/i?id=697f6884544b568f4d9b742a015492f5_l-5866055-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456244582&hash=e0d521cfc993f61f&hd=4",
+                desc: "Мальчик Хогарт находит в лесу гигантского доброго робота-пришельца. Военные хотят уничтожить его, и Хогарт должен спасти друга.",
+                tags: "#мультфильм, #фантастика, #комедия"
+            },
+            {
+                title: "Лего. Фильм",
+                year: "2014", rating: "7.5",
+                genre: "мультфильм, фантастика, фэнтези", duration: "100 мин",
+                type: "cartoon",
+                image: "https://upload.wikimedia.org/wikipedia/ru/e/ee/%D0%9B%D0%B5%D0%B3%D0%BE._%D0%A4%D0%B8%D0%BB%D1%8C%D0%BC_%28%D0%BF%D0%BE%D1%81%D1%82%D0%B5%D1%80%29.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456240583&hash=7cc95700005b1684&hd=2",
+                desc: "Обычный лего-строитель Эммет живет в идеальном пластмассовом мире, но однажды присоединяется к походу против злого диктатора, который хочет склеить всю лего-вселенную.",
+                tags: "#мультфильм, #фантастика, #комедия"
+            },
+            {
+                title: "Рататуй",
+                year: "2007", rating: "8.5",
+                genre: "мультфильм, приключения, комедия", duration: "111 мин",
+                type: "cartoon",
+                image: "https://avatars.mds.yandex.net/i?id=e85131dce5b7f0887a13404f65a70d90_l-6639666-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-226802088&id=456249370&hash=59b9bf7c7c41cb14&hd=3",
+                desc: "Крыс Реми с уникальным вкусом мечтает о кулинарии, но сородичи его не понимают. Попав на кухню шикарного ресторана, он решает проверить свои навыки. Там же оказывается юный уборщик Лингвини. Оба получают шанс.",
+                tags: "#мультфильм, #драма, #комедия"
+            },
+            {
+                title: "Дорогой звёзд (1-81 серии)",
+                year: "2018", rating: "4.3",
+                genre: "Аниме", duration: "300 мин",
+                type: "anime",
+                image: "https://files.itv.uz/uploads/content/poster/2024/09/24/d090133facdaf6b5c534499ed9af8591-q-700x1002.jpeg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-207759573&id=456241260&hash=f0ce6d9de63b76dd&hd=4",
+                desc: "Юноша Цинь Юй мечтает стать правителем Хонгмэнга, но врождённый недуг мешает ему развивать внутренние техники. Всё меняется, когда он находит таинственный кристалл, который сливается с его телом и наделяет его невероятным могуществом.",
+                tags: "#мультфильм #Боевик"
+            },
+            {
+                title: "Суперсемейка",
+                year: "2004", rating: "8.0",
+                genre: "Мультфильм", duration: "108 мин",
+                type: "cartoon",
+                image: "https://m.media-amazon.com/images/M/MV5BMTY5OTU0OTc2NV5BMl5BanBnXkFtZTcwMzU4MDcyMQ@@._V1_.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-235440653&id=456239043&hash=d47f886c2e7d58ea&hd=3",
+                desc: "Семья бывших супергероев пытается жить обычной жизнью, но вынуждена снова надеть костюмы, чтобы спасти мир от таинственного злодея. Заодно приходится срочно приводить себя в форму.",
+                tags: "#мультфильм #Боевик"
+            },
+            {
+                title: "Я краснею",
+                year: "2022", rating: "6.9",
+                genre: "Мультфильм", duration: "101 мин",
+                type: "cartoon",
+                image: "https://media.myshows.me/movies/normal/c/2e/c2e3465b974619791d8170dc3f9fac8b.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-114653103&id=456239668&hash=29863bd7afb7bae2&hd=4",
+                desc: "Девочка превращается в красную панду от эмоций и пытается совместить секрет с походом на концерт.",
+                tags: "#мультфильм #Комедии"
+            },
+            {
+                title: "Зверополис",
+                year: "2016", rating: "8.0",
+                genre: "Мультфильм", duration: "101 мин",
+                type: "cartoon",
+                image: "https://img.ixbt.site/live/images/original/39/99/55/2026/04/02/3e11d4a88e.jpg?h=877",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456243244&hash=99459e9dd7f44449&hd=4",
+                desc: "Зайчиха-полицейский и лис-мошенник расследуют дело, решающее судьбу всего Зверополиса.",
+                tags: "#мультфильм #Комедии #Детектив"
+            },
+            {
+                title: "Ты – Хозяин, Я – Слуга",
+                year: "2008", rating: "3.3",
+                genre: "Аниме", duration: "325 мин",
+                type: "anime",
+                image: "https://media.myshows.me/shows/normal/9/fe/9fefc04fc87992b660e9a1335329463f.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-194238253&id=456240707&hash=dec099a481db567c&hd=3",
+                desc: "Брат и сестра бегут в город от отца-пьяницы, и Рэн спасает странную светловолосую девушку.",
+                tags: "#мультфильм #Боевик"
+            },
+            {
+                title: "Маг Пошляк",
+                year: "2019", rating: "3.3",
+                genre: "Аниме", duration: "331 мин",
+                type: "anime",
+                image: "https://m.media-amazon.com/images/M/MV5BNDI2ZmZmMjItMjYxNi00NTc2LWE4ZDMtNDIzZjE2ZWE4NDUyXkEyXkFqcGc@._V1_.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-194238253&id=456240706&hash=2196fd7502d5a844&hd=3",
+                desc: "Двое школьников попадают в другой мир и решают вступить в магическую гильдию.",
+                tags: "#мультфильм #Боевик"
+            },
+            {
+                title: "Киберкраш: Влюбиться в твою улыбку",
+                year: "2021", rating: "7.9",
+                genre: "Дорама", duration: "1 395 мин",
+                type: "dorama",
+                image: "https://basket-29.wbbasket.ru/vol5764/part576420/576420190/images/big/1.webp",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-237446243&id=456239034&hash=3adb1cc49dfd1e2b&hd=2",
+                desc: "История любви двух профессиональных геймеров.",
+                tags: "#Мелодрама #Игры"
+            },
+            {
+                title: "Игра в кальмара",
+                year: "2021", rating: "7.9",
+                genre: "Дорама", duration: "1080 мин",
+                type: "dorama",
+                image: "https://avatars.mds.yandex.net/get-mpic/12219175/2a0000019458d087c6872434012e3197f36d/orig",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-209927261&id=456239263&hash=064972c34213b5fe&hd=4",
+                desc: "Мужчина в долгах участвует в смертельных играх с огромным призом, чтобы спасти дочь от переезда с бывшей женой.",
+                tags: "#Мелодрама #Триллер"
+            },
+            {
+                title: "Игра в кальмара 2",
+                year: "2024", rating: "8.9",
+                genre: "Дорама", duration: "1080 мин",
+                type: "dorama",
+                image: "https://avatars.mds.yandex.net/get-entity_search/1327047/804151401/S134x201_2x",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-219966194&id=456240815&hash=7dba4b8123d88d06&hd=4",
+                desc: "Мужчина в долгах участвует в смертельных играх с огромным призом, чтобы спасти дочь от переезда с бывшей женой.",
+                tags: "#Мелодрама #телеигра"
+            },
+            {
+                title: "Игра в кальмара 3",
+                year: "2025", rating: "7.4",
+                genre: "Дорама", duration: "360 мин",
+                type: "dorama",
+                image: "https://avatars.mds.yandex.net/get-mpic/1704691/2a00000197cd2d88365caf0604531962f7cf/orig",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-229241238&id=456239333&hash=12cf16a0132471ec&hd=4",
+                desc: "Мужчина в долгах участвует в смертельных играх с огромным призом, чтобы спасти дочь от переезда с бывшей женой.",
+                tags: "#Мелодрама #Триллер"
+            },
+            {
+                title: "Искусство ведения переговоров",
+                year: "2025", rating: "8.0",
+                genre: "Дорама", duration: "450 мин",
+                type: "dorama",
+                image: "https://avatars.mds.yandex.net/i?id=a810ff5b34956a42e2d05bbc72366230_l-5501647-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-233278936&id=456239023&hash=cd3a16d69c7cabd8&hd=4",
+                desc: "Будни эксперта по слияниям и поглощениям.",
+                tags: "#Мелодрама #Триллер"
+            },
+            {
+                title: "ШЕФ-ПОВАР ТИРАНА",
+                year: "2025", rating: "8.4",
+                genre: "Дорама", duration: "737 мин",
+                type: "dorama",
+                image: "https://avatars.mds.yandex.net/i?id=6041023d52ed98942501e11b08eafbb7_l-5338223-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-229303537&id=456239041&hash=08f1893bfc32688b&hd=4",
+                desc: "Ён Джи-ён — шеф-повар французской кухни. Выиграв кулинарный конкурс, девушка внезапно переносится во времена Чосона и теперь вынуждена готовить для монарха-тирана, который обладает обострённым чувством вкуса.",
+                tags: "#Мелодрама #Фантастика"
+            },
+            {
+                title: "Час пик (3 части)",
+                year: "1998", rating: "7.1",
+                genre: "боевик, комедия, преступление", duration: "295 мин",
+                type: "movie",
+                image: "https://upload.wikimedia.org/wikipedia/ru/5/51/Rush_Hour.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-194145340&id=456240281&hash=50abc62ea9397f2f&hd=4",
+                desc: "    Инспектор кунг-фу и болтливый полицейский объединяются, чтобы спасти похищенную девочку.",
+                tags: "#Драма, #комедия"
+            },
+            {
+                title: "Веном",
+                year: "2018", rating: "6.6",
+                genre: "ужасы, боевик, фантастика", duration: "112 мин",
+                type: "movie",
+                image: "https://upload.wikimedia.org/wikipedia/ru/0/05/Venom_poster.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456248523&hash=ac9de1dede94768d&hd=4",
+                desc: "Плохой симбиот вселяется в человека, и вместе они решают, что быть злодеями веселее, чем героями.",
+                tags: "#Ужасы, #комедия"
+            },
+            {
+                title: "Микки 17",
+                year: "2025", rating: "6.7",
+                genre: "драма, комедия", duration: "137 мин",
+                type: "movie",
+                image: "https://www.kino-teatr.ru/movie/poster/163452/241281.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456248521&hash=9ef40cd8f81594d9&hd=4",
+                desc: "Умирающий и воскресающий рабочий Микки 17 встречает свою свежую копию Микки 18.",
+                tags: "#Фантастика, #Приключения"
+            },
+            {
+                title: "Компаньон",
+                year: "2025", rating: "6.9",
+                genre: "Фантастика, комедия", duration: "97 мин",
+                type: "movie",
+                image: "https://avatars.mds.yandex.net/i?id=babfc1ef3c0f6b877bb8c80fbfd8f445d1769f11-16507896-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456248525&hash=62fdb260c4023d7b&hd=4",
+                desc: "Описание отсуствует",
+                tags: "#Триллер, #комедия"
+            },
+            {
+                title: "МОНСТРЫ НА КАНИКУЛАХ",
+                year: "2012", rating: "8.5",
+                genre: "Мультфильм, комедия", duration: "342 мин",
+                type: "cartoon",
+                image: "https://ir.ozone.ru/s3/multimedia-1-u/8086367046.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-136020824&id=456251481&hash=246a001a2dccb6fc&hd=4",
+                desc: "Граф Дракула для себя и своей любимой дочки построил хорошо укрытый от посторонних глаз отель, куда монстры со всего света приезжают отдохнуть от семейных забот, повседневной суеты и, конечно… людей. Но вездесущие американские туристы проникают и сюда.",
+                tags: "#Комедии, #мультфильм"
+            },
+            {
+                title: "Большой праздничный концерт, посвященный Дню Победы",
+                year: "09.05.2025", rating: "Концерт",
+                genre: "Концерт, видео", duration: "97 мин",
+                type: "video",
+                image: "https://www.kulturakolp.ru/wp-content/uploads/2024/05/BSuumj825xQ.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-33286804&id=456239500&hash=d454e1ef3c42c7db&hd=4",
+                desc: "Концерт к Дню победы над Фашисткой германией в 1945г.",
+                tags: "#Видео, #Концерт"
+            },
+            {
+                title: "Во все тяжкие",
+                year: "2008", rating: "6.9",
+                genre: "драма, триллер, преступление", duration: "230 мин",
+                type: "movie",
+                image: "https://avatars.mds.yandex.net/i?id=bcc0d2a70607fa10da434e1df502ba26_l-5283698-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-39297962&id=456258832&hash=a80e13e2be03c985&hd=4",
+                desc: "ОБольной раком учитель химии и его бывший ученик начинают варить мет, чтобы разбогатеть.",
+                tags: "#Триллер, #Драма"
+            },
+            {
+                title: "Во все тяжкие 2",
+                year: "2025", rating: "8.9",
+                genre: "драма, триллер, преступление", duration: "230 мин",
+                type: "movie",
+                image: "https://i.pinimg.com/474x/35/8a/9c/358a9c3e80cb2a925dc5f6d67b42143f.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-71822322&id=456254596&hash=33f54b00ae202e1a&hd=3",
+                desc: "ОБольной раком учитель химии и его бывший ученик начинают варить мет, чтобы разбогатеть.",
+                tags: "#Триллер, #Драма"
+            },
+            {
+                title: "Губка Боб: В поисках квадратных штанов",
+                year: "2025", rating: "6.5",
+                genre: "Мультфильм, Фантастика", duration: "98 мин",
+                type: "cartoon",
+                image: "https://avatars.mds.yandex.net/get-kinopoisk-image/16490236/7163018e-cab5-4697-8562-283f811f6f09/1920x",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-114653103&id=456239566&hash=f8ff4a5969f86d4b&hd=4",
+                desc: "Губка Боб вырос, но боится американских горок в парке для взрослых. Чтобы доказать храбрость, он идёт по стопам мистера Крабса и отправляется вслед за пиратом-призраком Летучим Голландцем.",
+                tags: "#Комедии, #мультфильм"
+            },
+            {
+                title: "Лёд",
+                year: "2018", rating: "6.8",
+                genre: "мюзикл, мелодрама", duration: "113 мин",
+                type: "movie",
+                image: "https://www.timeout.ru/wp-content/uploads/kpposters/900052.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-190452322&id=456239102&hash=1cc657158792d321&hd=3",
+                desc: "Фигуристка Надя добилась успеха, но на пике карьеры сталкивается с суровым испытанием судьбы.",
+                tags: "#Комедии, #Мелодрама"
+            },
+            {
+                title: "Лёд 2",
+                year: "2020", rating: "6.4",
+                genre: "мюзикл, мелодрама", duration: "132 мин",
+                type: "movie",
+                image: "https://m.media-amazon.com/images/M/MV5BOTNlM2UyMjAtOGNhNi00NTJmLWFhMzEtODM4NThlMzU5NDU2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-228917257&id=456239040&hash=17db0052d74b07de&hd=3",
+                desc: "Фигуристка Надя добилась успеха, но на пике карьеры сталкивается с суровым испытанием судьбы.",
+                tags: "#Комедии, #Мелодрама"
+            },
+            {
+                title: "Лёд 3",
+                year: "2018", rating: "6.8",
+                genre: "мюзикл, мелодрама", duration: "134 мин",
+                type: "movie",
+                image: "https://kinokartina.tv/upload/iblock/aa5/aa5dcda61a37c479c37e4399f4bada68.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-233305174&id=456240665&hash=c335c1a5ed91cedb&hd=2",
+                desc: "Фигуристка Надя добилась успеха, но на пике карьеры сталкивается с суровым испытанием судьбы.",
+                tags: "#Комедии, #Мелодрама"
+            },
+            {
+                title: "Зверополис 2",
+                year: "2025", rating: "7.5",
+                genre: "детектив, мультфильм, комедия, приключения, семейный", duration: "108 мин",
+                type: "cartoon",
+                image: "https://www.kino-teatr.ru/movie/poster/197155/249942.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-233305174&id=456241557&hash=bed4770aa1889cf6&hd=3",
+                desc: "Джуди и Ник ищут таинственную рептилию, работая под прикрытием в разных районах Зверополиса.",
+                tags: "#Комедии, #мультфильм"
+            },
+            {
+                title: "Мстители: Война бесконечности",
+                year: "2018", rating: "8.4",
+                genre: "фантастика, боевик, приключения", duration: "149 мин",
+                type: "movie",
+                image: "https://upload.wikimedia.org/wikipedia/ru/thumb/4/4d/Avengers_Infinity_War_poster.jpg/500px-Avengers_Infinity_War_poster.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-233305174&id=456240168&hash=00e97d50623990cd&hd=4",
+                desc: "Пока Мстители и их союзники продолжают защищать мир от различных опасностей, с которыми не смог бы справиться один супергерой, новая угроза возникает из космоса: Танос. Межгалактический тиран преследует цель собрать все шесть Камней Бесконечности — артефакты невероятной силы, с помощью которых можно менять реальность. Всё, с чем Мстители сталкивались ранее, вело к этому моменту — судьба Земли никогда ещё не была столь неопределённой.",
+                tags: "#Боевик, #Фантастика"
+            },
+            {
+                title: "Главный герой",
+                year: "2021", rating: "7.1",
+                genre: "мелодрама, фантастика, боевик, комедия", duration: "115 мин",
+                type: "movie",
+                image: "https://www.dvddom.ru/wa-data/public/shop/products/91/44/124491/images/392077/392077.750x0.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-149017704&id=456239193&hash=8a506a4d0d69af87&hd=3",
+                desc: "Парень живёт в абсурдно жестоком Городе, работает в Банке, который грабят каждый день, и мечтает о девушке из точного списка требований. Однажды он встречает идеальную незнакомку — и эта встреча меняет его и весь его мир.",
+                tags: "#Комедии, #Фантастика"
+            },
+            {
+                title: "Главы государств",
+                year: "2025", rating: "6.4",
+                genre: "Боевик, комедия", duration: "116 мин",
+                type: "movie",
+                image: "https://avatars.mds.yandex.net/i?id=df3b513e244358344b51db3beb1d067d_l-4493789-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-220018529&id=456248520&hash=e64f902ae9751d7f&hd=4",
+                desc: "Американский президент и британский премьер недолюбливают друг друга. Не удержавшись от взаимных колкостей на первой совместной пресс-конференции, они решают лететь на саммит НАТО в одном самолёте, чтобы показать общественности своё единство, но на борту продолжают перепалку. В этот момент на воздушное судно нападает отряд террористов, нанятый разыскиваемым Интерполом русским торговцем оружием. Выпрыгнув с парашютами из горящего самолёта, главы государств падают где-то в белорусской глуши и теперь, чтобы не дать миру развалиться, им придётся научиться действовать сообща.",
+                tags: "#Комедии, #боевик"
+            },
+            {
+                title: "Парад ко Дню Победы",
+                year: "2026", rating: "Торженство",
+                genre: "Видео", duration: "46 мин",
+                type: "video",
+                image: "https://avatars.mds.yandex.net/i?id=2a0000019e1824396ac0556e867f8feb902f-1544156-fast-images&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-25380626&id=456325823&hash=6205d938f88e77a6&hd=4",
+                desc: "Парад ко Дню Победы. Год: 2026, техника - нету",
+                tags: "#2026 #Парад #Видео"
+            },
+            {
+                title: "Как приручить дракона (Все части)",
+                year: "2010", rating: "",
+                genre: "Мультфильм", duration: "320 мин",
+                type: "cartoon",
+                image: "https://m.media-amazon.com/images/M/MV5BODA5Y2M0NjctNWQzMy00ODRhLWE0MzUtYmE1YTAzZjYyYmQyXkEyXkFqcGc@._V1_.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-31547740&id=456248455&hd=3",
+                desc: "Подростку Иккингу не слишком близки традиции его героического племени, много лет ведущего войну с драконами. Парень неожиданно заводит дружбу с драконом Беззубиком, который поможет ему и другим викингам увидеть мир с совершенно другой стороны.",
+                tags: "#Мультик #Комедия #Драма"
+            },
+            {
+                title: "Мини-фильм(Как приручить дракона)",
+                year: "2025", rating: "",
+                genre: "Мультфильм", duration: "92 мин",
+                type: "cartoon",
+                image: "https://avatars.mds.yandex.net/i?id=7747849f05ab5df31c1fb698ec1a2edb30b79121-8552726-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-136020824&id=456250051&hd=3",
+                desc: "Подростку Иккингу не слишком близки традиции его героического племени, много лет ведущего войну с драконами. Парень неожиданно заводит дружбу с драконом Беззубиком, который поможет ему и другим викингам увидеть мир с совершенно другой стороны.",
+                tags: "#Мультик #Комедия #Драма"
+            },
+            {
+                title: "Берсерк",
+                year: "1989", rating: "4.4",
+                genre: "Аниме", duration: "910 мин",
+                type: "anime",
+                image: "https://avatars.mds.yandex.net/i?id=1f570bf173578582c2e2f5a7e3ab0fac619b3a07-4432884-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-221135691&id=456239644&hd=3",
+                desc: "Берсерк» (Berserk) — манга (комикс) в жанре тёмного фэнтези, автор — Кэнтаро Миура. Первый том был издан в 1989 году",
+                tags: "#аниме #Боевик"
+            },
+            {
+                title: "Истребитель демонов",
+                year: "2022", rating: "4.6",
+                genre: "Аниме", duration: "1 210 мин",
+                type: "anime",
+                image: "https://m.media-amazon.com/images/M/MV5BMGVhZTY1YTctOWJlYS00MjcxLTlkNDgtYTUxZTM5MzMzZjI2XkEyXkFqcGc@._V1_.jpg",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-229072447&id=456239077&hd=2",
+                desc: "Эпоха Тайсё. Ещё с древних времён ходят слухи, что в лесу обитают человекоподобные демоны, которые питаются людьми и выискивают по ночам новых жертв. Тандзиро Камадо — старший сын в семье, потерявший отца и взявший на себя заботу о родных. Однажды он уходит в соседний город, чтобы продать древесный уголь. Вернувшись утром, парень обнаруживает перед собой страшную картину: вся родня зверски убита, а единственная выжившая — младшая сестра Нэдзуко, обращённая в демона, но пока не потерявшая человечность. С этого момента начинается долгое и опасное путешествие Тандзиро и Нэдзуко, в котором мальчик намерен разыскать убийцу и узнать способ исцеления сестры.",
+                tags: "#аниме #Боевик"
+            },
+            {
+                title: "Призрачная шестёрка",
+                year: "2019", rating: "6.1",
+                genre: "Боевик, комедия", duration: "128 мин",
+                type: "movie",
+                image: "https://sun6-23.userapi.com/impg/f9kiSwpecGALIrnOHRVNPp7kq8odOZP7yD60-Q/wTL1leEFf08.jpg?size=504x604&quality=96&sign=3b4c90a20587b17fa844855bcabba2a8&type=album",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-213377389&id=456241931&hd=4",
+                desc: "Инсценировав собственную смерть, сознательный миллиардер начинает новую жизнь — набирает отряд наёмников из разных стран, чтобы бороться со злом в этом мире. Все члены команды получают вместо имён цифры, и их целью становится свержение диктатора и освобождение народа страны Тургистан.",
+                tags: "#боевик"
+            },
+            {
+                title: "Индикар 2026. Этап 01 – Сент-Питерсберг",
+                year: "2026", rating: "Гонка",
+                genre: "Видео", duration: "134 мин",
+                type: "video",
+                image: "https://avatars.mds.yandex.net/i?id=8e725dd6a83a19526e8a0e0d8d33991495e7bc68-10836362-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-213739922&id=456243286&hd=4",
+                desc: "Первый этап сезона IndyCar 2026 — Firestone Grand Prix of St. Petersburg — прошёл 1 марта в Сент-Питерсберге (Флорида) на городской трассе Streets of St. Petersburg. Это была 100-круговая гонка, которая открыла сезон NTT INDYCAR Series",
+                tags: "#2026 #Гонка #Видео"
+            },
+            {
+                title: "Индикар 2026. Этап 01 – Сент-Питерсберг",
+                year: "2026", rating: "Гонка",
+                genre: "Видео", duration: "134 мин",
+                type: "video",
+                image: "https://avatars.mds.yandex.net/i?id=ed41a47439cfeeb08d09d77045ddb9e3a3461165-16464223-images-thumbs&n=13",
+                videoUrl: "https://vkvideo.ru/video_ext.php?oid=-213739922&id=456243314&hd=4",
+                desc: "Первый этап сезона IndyCar 2026 — Firestone Grand Prix of St. Petersburg — прошёл 1 марта в Сент-Питерсберге (Флорида) на городской трассе Streets of St. Petersburg. Это была 100-круговая гонка, которая открыла сезон NTT INDYCAR Series",
+                tags: "#2026 #Гонка #Видео"
+            },
+        ];
+
+        // ═══════════════════════════════════════════════════════
+        // УТИЛИТЫ
+        // ═══════════════════════════════════════════════════════
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // ГЛАВНЫЙ БАННЕР
+        // ═══════════════════════════════════════════════════════
+        function setHeroMovie(movie) {
+            document.getElementById('heroTitle').textContent = movie.title;
+            document.getElementById('heroRating').textContent = movie.rating;
+            document.getElementById('heroYear').textContent = movie.year;
+            document.getElementById('heroGenre').textContent = movie.genre;
+            document.getElementById('heroDuration').textContent = movie.duration;
+            document.getElementById('heroDesc').textContent = movie.desc;
+            document.getElementById('heroBgBlur').style.backgroundImage = `url(${movie.image})`;
+            document.getElementById('heroBtn').onclick = () => openModal(
+                movie.title,
+                `${movie.genre} • ${movie.year} • ${movie.duration}`,
+                movie.desc + (movie.tags ? ' ' + movie.tags : ''),
+                movie.videoUrl
+            );
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // КАРТОЧКА ФИЛЬМА
+        // ═══════════════════════════════════════════════════════
+        function createMovieCard(movie, index) {
+            const safeTitle = escapeHtml(movie.title);
+            const safeGenre = escapeHtml(movie.genre);
+            const safeYear = escapeHtml(movie.year);
+            const safeDuration = escapeHtml(movie.duration);
+            const safeDesc = escapeHtml(movie.desc);
+            const safeTags = escapeHtml(movie.tags || '');
+            const safeImage = escapeHtml(movie.image);
+            const safeRating = escapeHtml(movie.rating);
+            const safeVideoUrl = escapeHtml(movie.videoUrl);
+
+            return `
+                <div class="movie-card" 
+                     data-index="${index}"
+                     data-title="${safeTitle}"
+                     data-meta="${safeGenre} • ${safeYear} • ${safeDuration}"
+                     data-desc="${safeDesc}${safeTags ? ' ' + safeTags : ''}"
+                     data-video="${safeVideoUrl}"
+                     role="button"
+                     tabindex="0"
+                     aria-label="${safeTitle}, ${safeYear}, рейтинг ${safeRating}">
+                    <img src="${safeImage}" alt="${safeTitle}" class="movie-poster" loading="lazy">
+                    <div class="movie-rating" aria-label="Рейтинг ${safeRating}">
+                        <i class="fas fa-star" aria-hidden="true"></i> ${safeRating}
+                    </div>
+                    <div class="movie-overlay">
+                        <div class="play-btn" aria-hidden="true"><i class="fas fa-play"></i></div>
+                        <div class="movie-title">${safeTitle}</div>
+                        <div class="movie-info">${safeYear} • ${safeDuration}</div>
+                    </div>
+                    <!-- Кнопки перенесены в плеер -->
+                </div>
+            `;
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // ОТРИСОВКА
+        // ═══════════════════════════════════════════════════════
+        let currentType = 'all';
+        let currentGenre = 'Все';
+
+        function renderMovies(moviesList) {
+            const container = document.getElementById('moviesContainer');
+            if (!moviesList || moviesList.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 40px;">Ничего не найдено</p>';
+                return;
+            }
+            container.innerHTML = moviesList.map((movie, index) => createMovieCard(movie, index)).join('');
+            attachCardListeners();
+        }
+
+        function getFilteredMovies() {
+            let filtered = moviesData;
+
+            // Фильтр по типу
+            if (currentType !== 'all') {
+                filtered = filtered.filter(m => m.type === currentType);
+            }
+
+            // Фильтр по жанру
+            if (currentGenre !== 'Все') {
+                filtered = filtered.filter(m => m.genre.toLowerCase().includes(currentGenre.toLowerCase()));
+            }
+
+            return filtered;
+        }
+
+        function updateSectionTitle() {
+            const typeNames = {
+                'all': 'Все',
+                'movie': 'Фильмы',
+                'cartoon': 'Мультики',
+                'anime': 'Аниме',
+                'dorama': 'Дорамы'
+            };
+            const typeName = typeNames[currentType] || 'Все';
+            const genreText = currentGenre !== 'Все' ? ` — ${currentGenre}` : '';
+            document.getElementById('sectionTitle').textContent = `🎬 ${typeName}${genreText}`;
+        }
+
+        function attachCardListeners() {
+            const container = document.getElementById('moviesContainer');
+            container.addEventListener('click', function(e) {
+                const card = e.target.closest('.movie-card');
+                if (!card) return;
+                const title = card.dataset.title;
+                const meta = card.dataset.meta;
+                const desc = card.dataset.desc;
+                const videoUrl = card.dataset.video;
+                if (title && videoUrl) openModal(title, meta, desc, videoUrl);
+            });
+            container.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    const card = e.target.closest('.movie-card');
+                    if (card) { e.preventDefault(); card.click(); }
+                }
+            });
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // МОДАЛЬНОЕ ОКНО
+        // ═══════════════════════════════════════════════════════
+        function openModal(title, meta, desc, videoUrl) {
+            document.getElementById('modalTitle').textContent = title || 'Без названия';
+            document.getElementById('modalMeta').textContent = meta || '';
+            document.getElementById('modalDesc').textContent = desc || '';
+
+            // Обработчики для кнопок в плеере
+            document.getElementById('modalTogetherBtn').onclick = () => {
+                openTogether(title, videoUrl);
+            };
+            document.getElementById('modalShareBtn').onclick = () => {
+                // Извлекаем год и картинку из meta/desc если возможно
+                const yearMatch = meta.match(/(\d{4})/);
+                const year = yearMatch ? yearMatch[1] : '';
+                // Пытаемся найти картинку фильма в данных
+                const foundMovie = moviesData.find(m => m.title === title);
+                const image = foundMovie ? foundMovie.image : '';
+                openShareModal(title, videoUrl, image, year);
+            };
+
+            const wrapper = document.getElementById('videoWrapper');
+            wrapper.innerHTML = '';
+            if (videoUrl && videoUrl.includes('oid=') && !videoUrl.includes('XXXXXXX')) {
+                wrapper.innerHTML = `
+                    <iframe src="${videoUrl}" 
+                            allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" 
+                            frameborder="0" 
+                            allowfullscreen
+                            title="Плеер: ${escapeHtml(title)}">
+                    </iframe>`;
+            } else {
+                wrapper.innerHTML = `
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+                                display: flex; align-items: center; justify-content: center; 
+                                flex-direction: column; color: var(--text-muted);">
+                        <i class="fas fa-film" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                        <p>Видео временно недоступно</p>
+                        <p style="font-size: 12px; margin-top: 8px;">Добавьте рабочую ссылку на VK Видео</p>
+                    </div>`;
+            }
+            document.getElementById('videoModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('videoModal');
+            modal.classList.remove('active');
+            setTimeout(() => { document.getElementById('videoWrapper').innerHTML = ''; }, 300);
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('videoModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ═══════════════════════════════════════════════════════
+        // 🔍 ПОИСК
+        // ═══════════════════════════════════════════════════════
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            if (!query) {
+                renderMovies(getFilteredMovies());
+                return;
+            }
+            const isHashtag = query.startsWith('#');
+            const filtered = getFilteredMovies().filter(movie => {
+                const searchText = isHashtag ? (movie.tags || '').toLowerCase() : movie.title.toLowerCase();
+                return searchText.includes(query);
+            });
+            renderMovies(filtered);
+        });
+
+        // ═══════════════════════════════════════════════════════
+        // РАЗДЕЛИТЕЛЬ ТИПОВ (Фильмы / Мультики / Аниме / Дорамы)
+        // ═══════════════════════════════════════════════════════
+        document.querySelectorAll('.type-tab').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.type-tab').forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-selected', 'false');
+                });
+                this.classList.add('active');
+                this.setAttribute('aria-selected', 'true');
+                currentType = this.dataset.type;
+                updateSectionTitle();
+                renderMovies(getFilteredMovies());
+            });
+        });
+
+        // ═══════════════════════════════════════════════════════
+        // ФИЛЬТРАЦИЯ ПО ЖАНРАМ
+        // ═══════════════════════════════════════════════════════
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.category-btn').forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-selected', 'false');
+                });
+                this.classList.add('active');
+                this.setAttribute('aria-selected', 'true');
+                currentGenre = this.textContent.trim();
+                updateSectionTitle();
+                renderMovies(getFilteredMovies());
+            });
+        });
+
+        // ═══════════════════════════════════════════════════════
+        // ЭФФЕКТ ШАПКИ ПРИ СКРОЛЛЕ
+        // ═══════════════════════════════════════════════════════
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        });
+
+        // ЗАПУСК
+        document.addEventListener('DOMContentLoaded', function() {
+            setHeroMovie(moviesData[1]);
+            updateSectionTitle();
+            renderMovies(getFilteredMovies());
+            handleShareUrl();
+        });
+    
+        // ═══════════════════════════════════════════════════════
+        // 👥 СМОТРЕТЬ ВМЕСТЕ — QuorStream
+        // ═══════════════════════════════════════════════════════
+        function openTogether(title, videoUrl) {
+            if (!videoUrl || videoUrl.includes('XXXXXXX')) {
+                alert('Видео временно недоступно для совместного просмотра');
+                return;
+            }
+            // Формируем URL для QuorStream с предзаполненным видео
+            // Пробуем формат: https://qvorstream.onrender.com/?video=URL&title=TITLE
+            const encodedUrl = encodeURIComponent(videoUrl);
+            const encodedTitle = encodeURIComponent(title);
+            const quorStreamUrl = `https://qvorstream.onrender.com/?video=${encodedUrl}&title=${encodedTitle}`;
+            window.open(quorStreamUrl, '_blank');
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // 📤 МОДАЛЬНОЕ ОКНО "ПОДЕЛИТЬСЯ"
+        // ═══════════════════════════════════════════════════════
+        let currentShareData = { title: '', videoUrl: '', image: '', year: '' };
+
+        function openShareModal(title, videoUrl, image, year) {
+            currentShareData = { title, videoUrl, image, year };
+
+            // Формируем прямую ссылку на QuorKick (текущий сайт + hash с данными фильма)
+            const baseUrl = window.location.origin + window.location.pathname;
+            const shareParams = new URLSearchParams();
+            shareParams.set('title', title);
+            shareParams.set('video', videoUrl);
+            shareParams.set('img', image);
+            shareParams.set('year', year);
+            const quorKickUrl = `${baseUrl}?${shareParams.toString()}`;
+
+            // Голая ссылка для встраивания (iframe)
+            const embedUrl = videoUrl && videoUrl.includes('oid=') 
+                ? videoUrl 
+                : 'https://vkvideo.ru/video_ext.php?oid=-220018529&id=456243270';
+
+            // QuorStream комната
+            const quorStreamUrl = `https://qvorstream.onrender.com/?video=${encodeURIComponent(videoUrl)}&title=${encodeURIComponent(title)}`;
+
+            // Заполняем модалку
+            document.getElementById('shareOpenSiteBtn').href = quorKickUrl;
+            document.getElementById('shareQuorStreamBtn').href = quorStreamUrl;
+            document.getElementById('shareEmbedInput').value = embedUrl;
+
+            // Показываем
+            document.getElementById('shareModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').classList.remove('active');
+            document.body.style.overflow = '';
+            // Сброс кнопки копирования
+            const btn = document.getElementById('shareCopyEmbedBtn');
+            btn.classList.remove('copied');
+            btn.querySelector('.copy-text').textContent = 'Копировать';
+            btn.querySelector('i').className = 'fas fa-copy';
+        }
+
+        function copyShareLink() {
+            const baseUrl = window.location.origin + window.location.pathname;
+            const shareParams = new URLSearchParams();
+            shareParams.set('title', currentShareData.title);
+            shareParams.set('video', currentShareData.videoUrl);
+            shareParams.set('img', currentShareData.image);
+            shareParams.set('year', currentShareData.year);
+            const url = `${baseUrl}?${shareParams.toString()}`;
+
+            navigator.clipboard.writeText(url).then(() => {
+                // Визуальный фидбек можно добавить тут
+                const btn = event.currentTarget;
+                const original = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i><span>Скопировано!</span>';
+                setTimeout(() => { btn.innerHTML = original; }, 2000);
+            }).catch(() => {
+                // Fallback
+                const ta = document.createElement('textarea');
+                ta.value = url;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            });
+        }
+
+        function copyEmbedLink() {
+            const input = document.getElementById('shareEmbedInput');
+            input.select();
+            input.setSelectionRange(0, 99999);
+
+            navigator.clipboard.writeText(input.value).then(() => {
+                const btn = document.getElementById('shareCopyEmbedBtn');
+                btn.classList.add('copied');
+                btn.querySelector('.copy-text').textContent = 'Скопировано!';
+                btn.querySelector('i').className = 'fas fa-check';
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.querySelector('.copy-text').textContent = 'Копировать';
+                    btn.querySelector('i').className = 'fas fa-copy';
+                }, 2500);
+            }).catch(() => {
+                document.execCommand('copy');
+            });
+        }
+
+        // Закрытие по клику вне модалки и Escape
+        document.getElementById('shareModal').addEventListener('click', function(e) {
+            if (e.target === this) closeShareModal();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeShareModal();
+                closeModal();
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════
+        // 📥 ОБРАБОТКА ПАРАМЕТРОВ URL (открытие по шаре-ссылке)
+        // ═══════════════════════════════════════════════════════
+        function handleShareUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const sharedTitle = params.get('title');
+            const sharedVideo = params.get('video');
+            const sharedImg = params.get('img');
+            const sharedYear = params.get('year');
+
+            if (sharedTitle && sharedVideo) {
+                // Находим фильм в данных или создаем временный
+                const found = moviesData.find(m => m.videoUrl === sharedVideo);
+                if (found) {
+                    setHeroMovie(found);
+                    // Скролл к баннеру
+                    document.getElementById('heroSection').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    // Временный объект для шаренного фильма
+                    const tempMovie = {
+                        title: sharedTitle,
+                        year: sharedYear || '',
+                        rating: '?',
+                        genre: 'Поделились ссылкой',
+                        duration: '',
+                        type: 'movie',
+                        image: sharedImg || 'https://via.placeholder.com/600x900/141414/808080?text=QuorKick',
+                        videoUrl: sharedVideo,
+                        desc: 'Фильм, которым с вами поделились. Нажмите "Смотреть" для просмотра.',
+                        tags: ''
+                    };
+                    setHeroMovie(tempMovie);
+                    document.getElementById('heroSection').scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        }
+
+        // Запускаем проверку URL после загрузки
+        document.addEventListener('DOMContentLoaded', function() {
+            handleShareUrl();
+        });
+
+    
+        // ═══════════════════════════════════════════════════════
+        // 📖 ГАЙД: КАК ИЗБЕЖАТЬ БЛОКИРОВКИ РЕКЛАМЫ
+        // ═══════════════════════════════════════════════════════
+        function openGuideModal() {
+            document.getElementById('guideModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeGuideModal() {
+            document.getElementById('guideModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('guideModal').addEventListener('click', function(e) {
+            if (e.target === this) closeGuideModal();
+        });
+
+        // Проверяем, не заблокирована ли реклама, и показываем подсказку
+        function checkAdBlock() {
+            const adBanner = document.querySelector('.ad-banner');
+            if (adBanner) {
+                const rect = adBanner.getBoundingClientRect();
+                const isHidden = rect.width === 0 || rect.height === 0 || window.getComputedStyle(adBanner).display === 'none';
+                if (isHidden) {
+                    const btn = document.querySelector('.ad-guide-btn');
+                    if (btn) {
+                        btn.classList.add('pulse');
+                        btn.innerHTML = '<i class="fas fa-triangle-exclamation" aria-hidden="true"></i><span>Реклама заблокирована!</span>';
+                    }
+                }
+            }
+        }
+
+        // Запускаем проверку через 2 секунды после загрузки
+        setTimeout(checkAdBlock, 2000);
+
+        // ═══════════════════════════════════════════════════════
+        // ⚡ ОПТИМИЗАЦИИ ПРОИЗВОДИТЕЛЬНОСТИ
+        // ═══════════════════════════════════════════════════════
+
+        // Throttle для обработчика скролла
+        function throttle(func, limit) {
+            let inThrottle;
+            return function(...args) {
+                if (!inThrottle) {
+                    func.apply(this, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            };
+        }
+
+        // Заменяем обработчик скролла на throttled версию
+        window.removeEventListener('scroll', window._scrollHandler);
+        const throttledScroll = throttle(function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        }, 100);
+        window.addEventListener('scroll', throttledScroll, { passive: true });
+        window._scrollHandler = throttledScroll;
+
+        // Lazy loading для изображений через IntersectionObserver
+        function setupLazyImages() {
+            if (!('IntersectionObserver' in window)) return;
+
+            const imgObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                        }
+                        observer.unobserve(img);
+                    }
+                });
+            }, {
+                rootMargin: '100px 0px',
+                threshold: 0.01
+            });
+
+            document.querySelectorAll('.movie-poster[data-src]').forEach(img => {
+                imgObserver.observe(img);
+            });
+        }
+
+        // Перехватываем renderMovies для добавления lazy loading
+        const _originalRenderMovies = renderMovies;
+        renderMovies = function(moviesList) {
+            // Вызываем оригинальную функцию
+            _originalRenderMovies(moviesList);
+
+            // Добавляем lazy loading к новым изображениям
+            if ('IntersectionObserver' in window) {
+                const container = document.getElementById('moviesContainer');
+                container.querySelectorAll('.movie-poster').forEach(img => {
+                    if (!img.dataset.src && img.src && !img.src.includes('data:image')) {
+                        img.dataset.src = img.src;
+                        img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+                    }
+                });
+                setupLazyImages();
+            }
+        };
+
+        // Отключаем сложные анимации при низком заряде батареи
+        if ('getBattery' in navigator) {
+            navigator.getBattery().then(battery => {
+                if (battery.saveMode || battery.level < 0.2) {
+                    document.body.classList.add('perf-save-mode');
+                }
+            });
+        }
+</script>
+
+
+    <!-- ═══════════════════════════════════════
+         МОДАЛЬНОЕ ОКНО "ПОДЕЛИТЬСЯ"
+         ═══════════════════════════════════════ -->
+    <div class="share-modal-overlay" id="shareModal" role="dialog" aria-modal="true" aria-label="Поделиться фильмом">
+        <div class="share-modal-content">
+            <div class="share-header">
+                <div class="share-title">
+                    <i class="fas fa-share-nodes" aria-hidden="true"></i>
+                    Поделиться
+                </div>
+                <button class="share-close" onclick="closeShareModal()" type="button" aria-label="Закрыть">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="share-body">
+                <div class="share-section">
+                    <span class="share-label">Открыть на сайте</span>
+                    <div class="share-actions-grid">
+                        <a href="#" class="share-action-btn" id="shareOpenSiteBtn" target="_blank">
+                            <i class="fas fa-external-link-alt"></i>
+                            <span>Открыть на QuorKick</span>
+                            <small>Прямая ссылка на фильм</small>
+                        </a>
+                        <button class="share-action-btn" onclick="copyShareLink()" type="button">
+                            <i class="fas fa-link"></i>
+                            <span>Скопировать ссылку</span>
+                            <small>Поделиться</small>
+                        </button>
+                    </div>
+                </div>
+                <div class="share-divider"></div>
+                <div class="share-section">
+                    <span class="share-label">Голая ссылка для встраивания</span>
+                    <div class="share-link-box">
+                        <input type="text" id="shareEmbedInput" readonly value="" aria-label="Ссылка для встраивания">
+                        <button class="share-copy-btn" id="shareCopyEmbedBtn" onclick="copyEmbedLink()" type="button">
+                            <i class="fas fa-copy" aria-hidden="true"></i>
+                            <span class="copy-text">Копировать</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="share-divider"></div>
+                <div class="share-section">
+                    <span class="share-label">Смотреть вместе на QuorStream</span>
+                    <div class="share-actions-grid">
+                        <a href="#" class="share-action-btn" id="shareQuorStreamBtn" target="_blank" style="grid-column: 1 / -1;">
+                            <i class="fas fa-users"></i>
+                            <span>Создать комнату на QuorStream</span>
+                            <small>Совместный просмотр с друзьями</small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════
+         КНОПКА ГАЙДА ПО ИЗБЕЖАНИЮ  РЕКЛАМЫ
+         ═══════════════════════════════════════ -->
+    <button class="ad-guide-btn pulse" onclick="openGuideModal()" type="button" aria-label="Гайд: как избежать блокировки рекламы">
+        <i class="fas fa-shield-halved" aria-hidden="true"></i>
+        <span>Как избежать рекламы</span>
+    </button>
+
+    <!-- ═══════════════════════════════════════
+         МОДАЛЬНОЕ ОКНО ГАЙДА
+         ═══════════════════════════════════════ -->
+    <div class="guide-modal-overlay" id="guideModal" role="dialog" aria-modal="true" aria-label="Гайд по избежанию блокировки рекламы">
+        <div class="guide-modal-content">
+            <div class="guide-header">
+                <div class="guide-title">
+                    <i class="fas fa-shield-halved" aria-hidden="true"></i>
+                    Как удалить рекламу во время просмотра
+                </div>
+                <button class="guide-close" onclick="closeGuideModal()" type="button" aria-label="Закрыть гайд">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="guide-body">
+                <div class="guide-intro">
+                    <i class="fas fa-circle-info" style="margin-right: 8px; color: var(--accent);"></i>
+                    Рекламные блокировщики (AdBlock, uBlock Origin и др.) могут фильтровать рекламу в плеере. 
+                    Следуйте этой инструкции, чтобы добавить AdBlock (может не работать при БС).
+                </div>
+
+                <div class="guide-step">
+                    <div class="guide-step-header">
+                        <div class="guide-step-num">1</div>
+                        <div class="guide-step-title">Найдите иконку расширения</div>
+                    </div>
+                    <div class="guide-step-desc">
+                        В правом верхнем углу браузера, скачайте от туда:
+                        (<strong>AdBlock</strong>, <strong>uBlock Origin</strong>, <strong>AdGuard</strong> и т.д.). 
+                        Обычно это щит или перечеркнутый круг.
+                    </div>
+                </div>
+
+                <div class="guide-step">
+                    <div class="guide-step-header">
+                        <div class="guide-step-num">2</div>
+                        <div class="guide-step-title">Если вы сидите на VPN и хотите подержать проект</div>
+                    </div>
+                    <div class="guide-step-desc">
+                        Если вы сидите с включеным VPN (<strong>Zeus</strong>, <strong>QuorVPN</strong> и т.д.),
+                        то можете добавить наш проект в белый список
+                    </div>
+                </div>
+
+                <div class="guide-step">
+                    <div class="guide-step-header">
+                        <div class="guide-step-num">3</div>
+                        <div class="guide-step-title">Отключите блокировку для сайта</div>
+                    </div>
+                    <div class="guide-step-desc">
+                        Найдите переключатель или кнопку <strong>«Не работает на этом сайте»</strong>, 
+                        <strong>«Отключить на quorkick.ru»</strong> или <strong>«Добавить в белый список»</strong>. 
+                        Активируйте её — щит должен стать зелёным или появиться галочка.
+                    </div>
+                </div>
+
+                <div class="guide-step">
+                    <div class="guide-step-header">
+                        <div class="guide-step-num">4</div>
+                        <div class="guide-step-title">Перезагрузите страницу</div>
+                    </div>
+                    <div class="guide-step-desc">
+                        Нажмите <strong>F5</strong> или кнопку обновления в браузере. 
+                        Рекламный баннер должен появиться вверху страницы под главным баннером.
+                    </div>
+                </div>
+
+                <div class="guide-step">
+                    <div class="guide-step-header">
+                        <div class="guide-step-num">5</div>
+                        <div class="guide-step-title">Проверьте результат</div>
+                    </div>
+                    <div class="guide-step-desc">
+                        Если баннер с надписью <strong>«Советуем VSPBOOST»</strong> отображается корректно — 
+                        всё работает! Вы помогаете проекту развиваться.
+                    </div>
+                </div>
+
+                <div class="guide-tip">
+                    <i class="fas fa-lightbulb" aria-hidden="true"></i>
+                    <div class="guide-tip-text">
+                        <strong>Совет:</strong> Если вы используете встроенный блокировщик браузера 
+                        (Opera, Brave, Safari), зайдите в настройки браузера → «Блокировка рекламы» 
+                        или «Конфиденциальность» и добавьте наш сайт в исключения.
+                    </div>
+                </div>
+
+                <div class="guide-footer">
+                    <p class="guide-footer-text">
+                        <i class="fas fa-heart" aria-hidden="true"></i>
+                        Спасибо, что поддерживаете QuorKick!
+                        <i class="fas fa-heart" aria-hidden="true"></i>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>
